@@ -1,16 +1,25 @@
 package com.example.dog.viewmodel
 
+import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.dog.model.DogBreed
+import com.example.dog.model.DogDao
+import com.example.dog.model.DogDatabase
 import com.example.dog.model.DogsApiService
+import com.example.dog.util.SharedPreferencesHelper
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.launch
 
-class ListViewModel : ViewModel() {
+
+class ListViewModel(application: Application) : BaseViewModel(application) {
+
+    private var prefHelper = SharedPreferencesHelper(getApplication())
+    private var refreshTime = 5 * 60 * 1000 * 1000 * 1000L
 
     private val dogsService = DogsApiService()
     private val disposable = CompositeDisposable()
@@ -31,33 +40,64 @@ class ListViewModel : ViewModel() {
 //        dogs.value=doglist
 //        dogsLoadError.value=false
 //        loading.value=false
+        val updateTime = prefHelper.getUpdateTime()
+//        if (updateTime != null && updateTime != 0L && System.nanoTime() - updateTime < refreshTime) {
+//            fetchFromDatabase()
+//        } else {
+//            fetchFromRemote()
+//        }
 
-        fetchFromRemote()
 
     }
 
-    private fun fetchFromRemote() {
+    private fun fetchFromDatabase() {
         loading.value=true
+        launch {
+//            val dogs =DogDao = DogDatabase(getApplication()).dogdao
+        }
+    }
+
+    private fun fetchFromRemote() {
+        loading.value = true
         disposable.add(
             dogsService.getDogs()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object:DisposableSingleObserver<List<DogBreed>>(){
-                    override fun onSuccess(dogsList: List<DogBreed>) {
-                        dogs.value=dogsList
-                        dogsLoadError.value=false
-                        loading.value=false
+                .subscribeWith(object : DisposableSingleObserver<List<DogBreed>>() {
+                    override fun onSuccess(dogList: List<DogBreed>) {
+                        storeDataLocally(dogList)
                     }
 
                     override fun onError(e: Throwable) {
-                        dogsLoadError.value=true
-                        loading.value=false
+                        dogsLoadError.value = true
+                        loading.value = false
                         e.printStackTrace()
                     }
 
                 })
         )
     }
+
+    private fun dogsRetrived(dogList: List<DogBreed>) {
+        dogs.value = dogList
+        dogsLoadError.value = false
+        loading.value = false
+    }
+
+    private fun storeDataLocally(list: List<DogBreed>) {
+        launch {
+            val dao: DogDao = DogDatabase(getApplication()) as DogDao
+            dao.deleteAllDog()
+            val result: List<Long> = dao.insertAll(*list.toTypedArray())
+            var i = 0
+            while (i < list.size) {
+                list[i].uuid = result[i].toInt()
+            }
+            dogsRetrived(list)
+        }
+        prefHelper.saveUpdateTime(System.nanoTime())
+    }
+
 
     override fun onCleared() {
         super.onCleared()
