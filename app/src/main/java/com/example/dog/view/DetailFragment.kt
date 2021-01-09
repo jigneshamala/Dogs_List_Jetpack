@@ -13,6 +13,8 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dog.R
 import com.example.dog.model.DogBreed
+import com.example.dog.util.getProgessDrawable
+import com.example.dog.util.loadImage
 import com.example.dog.viewmodel.DetailViewModel
 import com.example.dog.viewmodel.ListViewModel
 import kotlinx.android.synthetic.main.fragment_detail.*
@@ -20,9 +22,10 @@ import kotlinx.android.synthetic.main.fragment_list.*
 
 class DetailFragment : Fragment() {
 
-    private var dogUuid = 0
+
     private lateinit var viewModel: DetailViewModel
-   // private  val dogListAdapter=DogListAdapter(arrayListOf())
+    private var dogUuid = 0
+    // private  val dogListAdapter=DogListAdapter(arrayListOf())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,13 +37,14 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel= ViewModelProviders.of(this).get(DetailViewModel::class.java)
-        viewModel.fetch()
-        arguments?.let{
-            dogUuid=DetailFragmentArgs.fromBundle(it).dogUuid
+        arguments?.let {
+            dogUuid = DetailFragmentArgs.fromBundle(it).dogUuid
 
 
         }
+        viewModel = ViewModelProviders.of(this).get(DetailViewModel::class.java)
+        viewModel.fetch(dogUuid)
+
 
         observeViewModel()
 
@@ -52,17 +56,19 @@ class DetailFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-       viewModel.dogLiveData.observe(this, Observer { dog:DogBreed->
-           dog?.let {
-               dogName.text=dog.dogBreed
-               dogPurpose.text=dog.bredFor
-               dogTemperament.text=dog.temperament
-               dogLifespan.text=dog.lifespan
-           }
+        viewModel.dogLiveData.observe(this, Observer { dog: DogBreed ->
+            dog?.let {
+                dogName.text = dog.dogBreed
+                dogPurpose.text = dog.bredFor
+                dogTemperament.text = dog.temperament
+                dogLifespan.text = dog.lifespan
+                context?.let {
+                    dogImage.loadImage(dog.imageUrl, getProgessDrawable(it))
+                }
+            }
 
-       })
+        })
     }
-
 
 
 }
