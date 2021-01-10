@@ -1,6 +1,6 @@
 # Dogs_List_Jetpack
 
-##implement component are
+**Implement Component Are**
 >* Navigation
 >* corotine
 >* mvvm
@@ -9,7 +9,7 @@
 >* KTX extention
 >* Data Binding
 
-##Third Party Libary
+**Third Party Libary**
 >* Rtrofit
 >* RxJava
 >* Glide
