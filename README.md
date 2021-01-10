@@ -7,6 +7,7 @@
 >* live data
 >* shared preferences
 >* KTX extention
+>* Data Binding
 
 ##Third Party Libary
 >* Rtrofit
