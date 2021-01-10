@@ -6,12 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dog.R
+import com.example.dog.databinding.FragmentDetailBinding
+import com.example.dog.databinding.ItemDogBinding
 import com.example.dog.model.DogBreed
 import com.example.dog.util.getProgessDrawable
 import com.example.dog.util.loadImage
@@ -27,12 +30,16 @@ class DetailFragment : Fragment() {
     private var dogUuid = 0
     // private  val dogListAdapter=DogListAdapter(arrayListOf())
 
+    private lateinit var dataBinding: FragmentDetailBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        dataBinding=DataBindingUtil.inflate(inflater,R.layout.fragment_detail,container,false)
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_detail, container, false)
+        //return inflater.inflate(R.layout.fragment_detail, container, false)
+        return dataBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -58,13 +65,21 @@ class DetailFragment : Fragment() {
     private fun observeViewModel() {
         viewModel.dogLiveData.observe(this, Observer { dog: DogBreed ->
             dog?.let {
-                dogName.text = dog.dogBreed
-                dogPurpose.text = dog.bredFor
-                dogTemperament.text = dog.temperament
-                dogLifespan.text = dog.lifespan
+//                dogName.text = dog.dogBreed
+//                dogPurpose.text = dog.bredFor
+//                dogTemperament.text = dog.temperament
+//                dogLifespan.text = dog.lifespan
+//                context?.let {
+//                    dogImage.loadImage(dog.imageUrl, getProgessDrawable(it))
+//                }
+
+                //databinding
+
+                dataBinding.dog = dog
                 context?.let {
                     dogImage.loadImage(dog.imageUrl, getProgessDrawable(it))
                 }
+
             }
 
         })

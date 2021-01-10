@@ -3,6 +3,7 @@ package com.example.dog.util
 import android.content.Context
 import android.transition.CircularPropagation
 import android.widget.ImageView
+import androidx.databinding.BindingAdapter
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -25,4 +26,9 @@ fun ImageView.loadImage(url:String?,progessDrawable: CircularProgressDrawable){
         .setDefaultRequestOptions(options)
         .load(url)
         .into(this)
+}
+@BindingAdapter("android:imageUrl")
+//used to refern the layout
+fun loadImage(view:ImageView,url:String){
+    view.loadImage(url, getProgessDrawable(view.context))
 }
