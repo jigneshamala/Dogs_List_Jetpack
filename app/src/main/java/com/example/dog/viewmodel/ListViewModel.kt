@@ -8,6 +8,7 @@ import com.example.dog.model.DogBreed
 import com.example.dog.model.DogDao
 import com.example.dog.model.DogDatabase
 import com.example.dog.model.DogsApiService
+import com.example.dog.util.NotificationHelper
 import com.example.dog.util.SharedPreferencesHelper
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -54,12 +55,23 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
     }
 
     private fun fetchFromDatabase() {
+        checkCacheDuration()
         loading.value = true
         launch {
             val dogs: List<DogBreed> = DogDatabase(getApplication()).dogDao().getAllDogs()
             dogsRetrived(dogs)
             Toast.makeText(getApplication(), "Dogs Retrieved from database", Toast.LENGTH_SHORT)
                 .show()
+        }
+    }
+
+    private fun checkCacheDuration() {
+       val cachePreference:String?=prefHelper.getCacheDuration()
+        try{
+           val cachePreferenceInt=cachePreference?.toInt()?:5* 60
+            refreshTime=cachePreferenceInt.times( 1000 * 1000 * 1000L)
+        }catch (e:NumberFormatException){
+            e.printStackTrace()
         }
     }
 
@@ -77,6 +89,7 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
                             "Dogs Retrieved from endpoint",
                             Toast.LENGTH_SHORT
                         ).show()
+                        NotificationHelper(getApplication()).createNotification()
                     }
 
                     override fun onError(e: Throwable) {

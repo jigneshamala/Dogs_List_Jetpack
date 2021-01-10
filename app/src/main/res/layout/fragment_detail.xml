@@ -7,12 +7,16 @@
         <variable
             name="dog"
             type="com.example.dog.model.DogBreed" />
+        <variable
+            name="palette"
+            type="com.example.dog.model.DogPalette" />
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.DetailFragment">
+        tools:context=".view.DetailFragment"
+        android:background="@{palette.color}">
 
 
         <ImageView
@@ -21,7 +25,8 @@
             android:layout_height="wrap_content"
             android:src="@mipmap/ic_dog_icon"
             android:scaleType="fitCenter"
-            android:layout_marginTop="5dp"
+
+            android:layout_alignParentTop="true"
             android:minHeight="200dp"/>
 
         <TextView

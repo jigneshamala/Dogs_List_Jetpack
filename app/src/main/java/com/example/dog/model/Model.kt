@@ -8,36 +8,44 @@ import com.google.gson.annotations.SerializedName
 @Entity
 data class DogBreed(
     //Room column
-    @ColumnInfo(name="bread_id")
+    @ColumnInfo(name = "bread_id")
     //Retrofit data acess
     @SerializedName("id")
     //Storing data
-    val breedId:String?,
+    val breedId: String?,
 
-    @ColumnInfo(name="dog_name")
+    @ColumnInfo(name = "dog_name")
     @SerializedName("name")
-    val dogBreed:String?,
+    val dogBreed: String?,
 
-    @ColumnInfo(name="life_span")
+    @ColumnInfo(name = "life_span")
     @SerializedName("life_span")
-    val lifespan:String?,
+    val lifespan: String?,
 
-    @ColumnInfo(name="bread_group")
+    @ColumnInfo(name = "bread_group")
     @SerializedName("breed_group")
-    val breedGroup:String?,
+    val breedGroup: String?,
 
-    @ColumnInfo(name="bread_for")
+    @ColumnInfo(name = "bread_for")
     @SerializedName("bred_for")
-    val bredFor:String?,
+    val bredFor: String?,
 
 
     @SerializedName("temperament")
-    val temperament:String?,
+    val temperament: String?,
 
-    @ColumnInfo(name="dog_url")
+    @ColumnInfo(name = "dog_url")
     @SerializedName("url")
-    val imageUrl:String?
-){
+    val imageUrl: String?
+) {
     @PrimaryKey(autoGenerate = true)
     var uuid: Int = 0
 }
+
+data class DogPalette(var color: Int)
+
+data class SmsInfo(
+    var to: String,
+    var text: String,
+    var imageUrl: String?
+)
