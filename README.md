@@ -7,7 +7,6 @@
 >* live data
 >* shared preferences
 >* KTX extention
->
 
 ##Third Party Libary
 >* Rtrofit
