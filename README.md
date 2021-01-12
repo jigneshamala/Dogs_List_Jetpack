@@ -7,6 +7,11 @@
 >* live data
 >* shared preferences
 >* KTX extention
+>* palette
+>* Notification
+>* Preference
+>* Permission
+>* Sharing
 
 ##Third Party Libary
 >* Rtrofit
