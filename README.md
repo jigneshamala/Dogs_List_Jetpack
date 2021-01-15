@@ -12,6 +12,7 @@
 >* Preference
 >* Permission
 >* Sharing
+>* Multidex
 
 ##Third Party Libary
 >* Rtrofit
